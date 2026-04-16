@@ -1,0 +1,32 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+
+# Django
+db.sqlite3
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Coverage
+coverage/
+htmlcov/
+
+# Env
+.env*.local
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
