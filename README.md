@@ -2,6 +2,18 @@
 
 An internal admin tool for managing expense categories and expense codes. Built with Django REST Framework (backend) and Next.js (frontend).
 
+## Progress Summary
+
+**Completed:** Shipped expense admin tool (full stack) to GitHub; built Django REST API with CRUD, optimistic locking, and pagination; built Next.js frontend with side-by-side table layout, modal forms, and active/inactive filtering; resolved filter-page-reset bug and inactive category code sync issue; wrote 10 backend + 27 frontend tests.
+
+**Ongoing:** Finalising README documentation with trade-offs and production improvement roadmap (auth, concurrency, scaling, branching strategy).
+
+**Blockers/Updates:** No blockers. Repo pushed to github.com/hleow97/Internal-Admin-tool — ready for review.
+
+**Plan for Tomorrow:** Awaiting feedback on the current implementation; can start on search/sorting functionality, authentication layer, or UI refinements based on team priorities.
+
+---
+
 ## Tech Stack
 
 | Layer    | Technology                                    |
@@ -10,6 +22,8 @@ An internal admin tool for managing expense categories and expense codes. Built 
 | Database | SQLite                                        |
 | Frontend | Next.js 15, React 19, TypeScript, Tailwind v4 |
 | Testing  | pytest (backend), Jest + React Testing Library (frontend) |
+
+---
 
 ## Getting Started
 
@@ -55,6 +69,8 @@ Network errors show a dismissible alert. There's no retry logic, no offline queu
 
 ---
 
+---
+
 ## Production Improvements
 
 ### Authentication & Permissions
@@ -78,6 +94,8 @@ Network errors show a dismissible alert. There's no retry logic, no offline queu
 - Add `DEFAULT_PERMISSION_CLASSES` and `DEFAULT_AUTHENTICATION_CLASSES` to DRF settings
 - Frontend: wrap app in auth provider, add login page, attach token to all API requests
 
+---
+
 ### Concurrency & Conflicting Updates
 
 **What's already implemented:** Optimistic locking via an `updated_at` timestamp check. On update, the backend atomically filters by `pk` AND `updated_at` in a single query:
@@ -96,6 +114,8 @@ This prevents lost updates — if two users edit the same record, the second sav
 
 2. **Retry UX on conflict** — Instead of just showing "modified by another user", offer a diff view: show the user what changed since their last read and let them merge or overwrite..
 
+
+---
 
 ### Scaling to Thousands of Categories and Codes
 
@@ -116,6 +136,8 @@ This prevents lost updates — if two users edit the same record, the second sav
 - Debounced search to avoid flooding the API with requests on every keystroke
 - Consider `react-query` or `SWR` for built-in caching, deduplication, and background refetching
 
+---
+
 ### Search & Sorting
 
 **Backend:**
@@ -128,4 +150,32 @@ This prevents lost updates — if two users edit the same record, the second sav
 - On search, reset to page 1 (same pattern as the existing active/inactive filter toggle)
 - Sortable table headers — click to toggle ascending/descending
 - Search works naturally with the paginated response: `count` reflects filtered results, so pagination adjusts automatically
+
+---
+
+### Branching & Release Strategy
+
+Currently the project has a single `main` branch with no formal release process. At enterprise scale, a Gitflow model provides the structure needed for predictable releases and customer SLAs.
+
+**Branch model:**
+- `main` — production, tagged releases only (e.g., `v1.2.0`)
+- `release/*` — stabilization branch for QA, security review, and compliance sign-off before shipping
+- `develop` — integration branch, always ahead of `main`, where feature branches merge
+- `feature/*` — short-lived branches off `develop`, merged via PR
+
+**Environment mapping:**
+- `develop` → staging (internal testing)
+- `release/*` → UAT (customer-facing pre-production)
+- `main` → production
+
+**Why this matters for enterprise customers:**
+- Parallel release tracks — stabilize `release/1.2.0` while `develop` keeps moving on 1.3 features
+- Hotfix path — critical production bugs branch off `main`, fix, and merge back to both `main` and `develop`
+- Audit trail — tagged releases on `main` map cleanly to changelogs, compliance docs, and support tickets
+- Predictable schedules — enterprise customers expect staged rollouts, not continuous deployment
+
+**Additional practices:**
+- Semantic versioning (`MAJOR.MINOR.PATCH`) tied to tagged releases
+- Protected branches with required PR reviews, passing CI, and security scans
+- Automated changelog generation from PR titles between tags
 
