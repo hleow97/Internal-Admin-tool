@@ -12,6 +12,10 @@ An internal admin tool for managing expense categories and expense codes. Built 
 
 ![Inactive codes](assets/Screenshot%202026-04-16%20at%2012.05.15%E2%80%AFPM.png)
 
+**Edit category modal:**
+
+![Edit category](assets/Screenshot%202026-04-16%20at%2012.48.34%E2%80%AFPM.png)
+
 **Inactive categories view:**
 
 ![Inactive categories](assets/Screenshot%202026-04-16%20at%2012.04.58%E2%80%AFPM.png)
@@ -194,4 +198,41 @@ Currently the project has a single `main` branch with no formal release process.
 - Semantic versioning (`MAJOR.MINOR.PATCH`) tied to tagged releases
 - Protected branches with required PR reviews, passing CI, and security scans
 - Automated changelog generation from PR titles between tags
+
+---
+
+### CI/CD Pipeline
+
+Currently the project has no automated build, test, or deploy pipeline. For production, a CI/CD pipeline ensures every change is validated before it reaches users.
+
+**Pipeline stages (GitHub Actions):**
+1. **Lint & Type Check** — `ruff` / `mypy` (backend), `eslint` / `tsc` (frontend) on every PR
+2. **Test** — `pytest` (backend) + `jest` (frontend) run in parallel; PR blocked if any test fails
+3. **Build** — Docker image built and pushed to container registry (ECR / GCR)
+4. **Deploy to Staging** — automatic on merge to `develop`; smoke tests run post-deploy
+5. **Deploy to Production** — triggered by tagged release from `main`; canary or blue-green rollout
+
+**Database migrations:** Run as a separate pre-deploy step (not at app startup) to avoid race conditions when multiple containers start simultaneously.
+
+---
+
+### Logging & Metrics
+
+Currently the application relies on Django's default console logging with no structured output or metrics collection.
+
+**Logging:**
+- Structured JSON logs (not plain text) — every log entry includes timestamp, request ID, user ID, and action
+- Centralized log aggregation via CloudWatch, Datadog, or ELK stack
+- Correlation IDs across frontend → backend to trace a single user action through the system
+- Audit log for all write operations — who changed what, when — stored immutably for compliance
+
+**Metrics:**
+- Request latency (p50, p95, p99) and error rates per endpoint
+- Database query count and duration per request
+- Business metrics: categories created/updated per day, active vs inactive ratio
+- Dashboards with alerting thresholds (e.g., error rate > 1%, p99 latency > 2s)
+
+**Health checks:**
+- `/healthz` — shallow check for load balancer (app is running)
+- `/readyz` — deep check for dependencies (database connected, migrations current)
 
