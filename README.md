@@ -18,7 +18,7 @@ An internal admin tool for managing expense categories and expense codes. Built 
 
 **Inactive categories view:**
 
-![Inactive categories](assets/Screenshot%202026-04-16%20at%2012.04.58%E2%80%AFPM.png)
+![Inactive categories](assets/Screenshot%202026-04-16%20at%201.41.55%E2%80%AFPM.png)
 
 ---
 
