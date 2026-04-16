@@ -148,6 +148,38 @@ SEED_DATA = {
     ],
 }
 
+INACTIVE_SEED_DATA = {
+    'Telecommunications': [
+        ('TEL-001', 'Landline phones'),
+        ('TEL-002', 'Fax services'),
+        ('TEL-003', 'Pager services'),
+        ('TEL-004', 'Telegraph services'),
+    ],
+    'Print & Publishing': [
+        ('PUB-001', 'Newspaper ads'),
+        ('PUB-002', 'Magazine subscriptions'),
+        ('PUB-003', 'Printed directories'),
+        ('PUB-004', 'Yellow pages listing'),
+        ('PUB-005', 'Classified ads'),
+    ],
+}
+
+# Codes that are inactive within active categories
+INACTIVE_CODES_IN_ACTIVE_CATEGORIES = {
+    'Travel': [
+        ('TRV-021', 'Telegram booking confirmations'),
+        ('TRV-022', 'Travel fax confirmations'),
+    ],
+    'Office Supplies': [
+        ('OFF-014', 'Typewriter ribbons'),
+        ('OFF-015', 'Carbon copy paper'),
+    ],
+    'Software': [
+        ('SFT-015', 'On-premise license (deprecated)'),
+        ('SFT-016', 'Floppy disk backup software'),
+    ],
+}
+
 
 class Command(BaseCommand):
     help = 'Seed expense categories and codes for local development'
@@ -169,6 +201,46 @@ class Command(BaseCommand):
                     },
                 )
                 code_status = 'Created' if code_created else 'Already exists'
+                self.stdout.write(f'    Code: {code_str} - {code_status}')
+
+        for category_name, codes in INACTIVE_SEED_DATA.items():
+            category, created = ExpenseCategory.objects.get_or_create(
+                name=category_name,
+                defaults={'is_active': False},
+            )
+            if created:
+                self.stdout.write(
+                    f'  Category: {category_name} - Created (inactive)'
+                )
+            else:
+                self.stdout.write(
+                    f'  Category: {category_name} - Already exists'
+                )
+
+            for code_str, description in codes:
+                _, code_created = ExpenseCode.objects.get_or_create(
+                    code=code_str,
+                    defaults={
+                        'category': category,
+                        'description': description,
+                        'is_active': False,
+                    },
+                )
+                code_status = 'Created (inactive)' if code_created else 'Already exists'
+                self.stdout.write(f'    Code: {code_str} - {code_status}')
+
+        for category_name, codes in INACTIVE_CODES_IN_ACTIVE_CATEGORIES.items():
+            category = ExpenseCategory.objects.get(name=category_name)
+            for code_str, description in codes:
+                _, code_created = ExpenseCode.objects.get_or_create(
+                    code=code_str,
+                    defaults={
+                        'category': category,
+                        'description': description,
+                        'is_active': False,
+                    },
+                )
+                code_status = 'Created (inactive)' if code_created else 'Already exists'
                 self.stdout.write(f'    Code: {code_str} - {code_status}')
 
         self.stdout.write(self.style.SUCCESS('Seed data complete.'))
