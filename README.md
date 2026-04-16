@@ -6,15 +6,15 @@ An internal admin tool for managing expense categories and expense codes. Built 
 
 **Active categories with codes:**
 
-![Active categories](assets/Screenshot%202026-04-16%20at%2012.05.04%20PM.png)
+![Active categories](assets/Screenshot%202026-04-16%20at%2012.05.04%E2%80%AFPM.png)
 
 **Active categories with inactive codes filter:**
 
-![Inactive codes](assets/Screenshot%202026-04-16%20at%2012.05.15%20PM.png)
+![Inactive codes](assets/Screenshot%202026-04-16%20at%2012.05.15%E2%80%AFPM.png)
 
 **Inactive categories view:**
 
-![Inactive categories](assets/Screenshot%202026-04-16%20at%2012.04.58%20PM.png)
+![Inactive categories](assets/Screenshot%202026-04-16%20at%2012.04.58%E2%80%AFPM.png)
 
 ---
 
