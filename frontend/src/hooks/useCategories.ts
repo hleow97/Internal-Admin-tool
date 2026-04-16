@@ -42,6 +42,11 @@ export function useCategories() {
     fetchData();
   }, [fetchData]);
 
+  const setShowInactiveAndReset = useCallback((show: boolean) => {
+    setShowInactive(show);
+    setPage(1);
+  }, []);
+
   const refetch = useCallback(() => {
     setFetchTrigger((prev) => prev + 1);
   }, []);
@@ -55,7 +60,7 @@ export function useCategories() {
     totalCount,
     showInactive,
     setPage,
-    setShowInactive,
+    setShowInactive: setShowInactiveAndReset,
     refetch,
   };
 }

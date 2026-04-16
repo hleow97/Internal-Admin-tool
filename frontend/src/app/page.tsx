@@ -37,7 +37,7 @@ export default function Home() {
     setPage: setCodePage,
     setShowInactive: setCodeShowInactive,
     refetch: refetchCodes,
-  } = useCodes(selectedCategoryId);
+  } = useCodes(selectedCategoryId, categoryShowInactive);
 
   const selectedCategory = useMemo(
     () => categories.find((c: Category) => c.id === selectedCategoryId),

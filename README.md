@@ -35,6 +35,9 @@ npm run dev                  # http://localhost:3000
 ### SQLite Instead of PostgreSQL
 SQLite was chosen for zero-configuration setup. In production, this limits concurrent write throughput, has no built-in full-text search, and lacks advanced indexing (trigram, GIN). A single-writer lock is acceptable for a solo-developer demo but not for multi-user production use.
 
+### Active/Inactive Separated by Filter Instead of Shown Together
+Inactive categories and codes are hidden behind a dropdown filter rather than displayed alongside active items with visual distinction. This keeps the default view clean and focused — admins primarily work with active records, and mixing statuses in one list adds visual noise and increases the chance of accidental edits to inactive items. The trade-off is discoverability: new users may not realize inactive items exist until they switch the filter. A production version could show a count badge (e.g., "3 inactive") next to the filter to surface this.
+
 ### No Search or Sorting
 Category and code lists are paginated but not searchable or sortable. Users must page through results to find what they need. For a production tool with hundreds or thousands of records, this would be a significant usability gap.
 

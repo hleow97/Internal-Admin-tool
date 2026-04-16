@@ -3,7 +3,7 @@ import { getCodes } from "@/lib/api";
 import { config } from "@/lib/config";
 import type { Code } from "@/lib/types";
 
-export function useCodes(categoryId: string | null) {
+export function useCodes(categoryId: string | null, defaultInactive: boolean = false) {
   const [codes, setCodes] = useState<Code[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -15,8 +15,8 @@ export function useCodes(categoryId: string | null) {
 
   useEffect(() => {
     setPage(1);
-    setShowInactive(false);
-  }, [categoryId]);
+    setShowInactive(defaultInactive);
+  }, [categoryId, defaultInactive]);
 
   const fetchData = useCallback(async () => {
     if (!categoryId) {
@@ -55,6 +55,11 @@ export function useCodes(categoryId: string | null) {
     fetchData();
   }, [fetchData]);
 
+  const setShowInactiveAndReset = useCallback((show: boolean) => {
+    setShowInactive(show);
+    setPage(1);
+  }, []);
+
   const refetch = useCallback(() => {
     setFetchTrigger((prev) => prev + 1);
   }, []);
@@ -68,7 +73,7 @@ export function useCodes(categoryId: string | null) {
     totalCount,
     showInactive,
     setPage,
-    setShowInactive,
+    setShowInactive: setShowInactiveAndReset,
     refetch,
   };
 }
