@@ -172,7 +172,12 @@ export default function CodePanel({
                   <td className="px-5 py-4 text-right">
                     <button
                       onClick={() => setEditingId(code.id)}
-                      className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors"
+                      disabled={!categoryActive}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                        categoryActive
+                          ? "text-blue-600 bg-blue-50 border border-blue-200 hover:bg-blue-100"
+                          : "text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed"
+                      }`}
                     >
                       Edit
                     </button>
