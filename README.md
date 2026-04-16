@@ -72,6 +72,13 @@ SQLite was chosen for zero-configuration setup. In production, this limits concu
 ### Active/Inactive Separated by Filter Instead of Shown Together
 Inactive categories and codes are hidden behind a dropdown filter rather than displayed alongside active items with visual distinction. This keeps the default view clean and focused — admins primarily work with active records, and mixing statuses in one list adds visual noise and increases the chance of accidental edits to inactive items. The trade-off is discoverability: new users may not realize inactive items exist until they switch the filter. A production version could show a count badge (e.g., "3 inactive") next to the filter to surface this.
 
+### Soft Delete Only (No Hard Delete)
+The API has no `DELETE` endpoints. Deactivation (`is_active: false` via `PUT`) is the only way to remove items. This was chosen because it's safer to ship without hard delete than to ship hard delete without proper safeguards — accidental permanent deletion in an admin tool can break downstream references in reports, transactions, or audit trails, and there's no undo.
+
+In production, both soft and hard delete would coexist:
+- **Soft delete** remains the default action for day-to-day admin use — deactivate, recover if needed
+- **Hard delete** added for data cleanup, GDPR/privacy compliance ("right to be forgotten"), and removing test data — restricted to admin role only, blocked if the record has dependencies (e.g., category with codes), requires explicit confirmation, and is logged in the audit trail before the record is removed
+
 ### No Search or Sorting
 Category and code lists are paginated but not searchable or sortable. Users must page through results to find what they need. For a production tool with hundreds or thousands of records, this would be a significant usability gap.
 
