@@ -2,6 +2,22 @@
 
 An internal admin tool for managing expense categories and expense codes. Built with Django REST Framework (backend) and Next.js (frontend).
 
+## Screenshots
+
+**Active categories with codes:**
+
+![Active categories](assets/Screenshot%202026-04-16%20at%2012.05.04%20PM.png)
+
+**Active categories with inactive codes filter:**
+
+![Inactive codes](assets/Screenshot%202026-04-16%20at%2012.05.15%20PM.png)
+
+**Inactive categories view:**
+
+![Inactive categories](assets/Screenshot%202026-04-16%20at%2012.04.58%20PM.png)
+
+---
+
 ## Progress Summary
 
 **Completed:** Shipped expense admin tool (full stack) to GitHub; built Django REST API with CRUD, optimistic locking, and pagination; built Next.js frontend with side-by-side table layout, modal forms, and active/inactive filtering; resolved filter-page-reset bug and inactive category code sync issue; wrote 10 backend + 27 frontend tests.
